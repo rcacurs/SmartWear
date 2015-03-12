@@ -1,0 +1,28 @@
+
+    <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+        <CheckBoxPreference android:title="@string/alertPrefString" android:key="alert_feedback" android:summary="@string/alertPrefDescritption" android:defaultValue="false"/>
+        <CheckBoxPreference android:title="@string/vibratePrefTitle" android:key="vibrate_feedback" android:summary="@string/vibratePrefDescription" android:defaultValue="false"/>
+    
+        <EditTextPreference
+            android:key="set_threshold"
+            android:title="Threshold setting"
+            android:summary="Threshold setting for bad posture detection [cm]"
+            android:inputType="numberDecimal"
+            android:digits="01234567890."
+            android:defaultValue="3.0"/>
+        <EditTextPreference
+            android:key="set_statistics_interval"
+            android:title="Statistics Interval Setting"
+            android:summary="Good posture percentage statistics update interval [min]"
+            android:inputType="numberDecimal"
+            android:digits="01234567890."
+            android:defaultValue="3.0"></EditTextPreference>
+       <Preference
+           android:title="Restore Default Settings"
+           android:key="restore_defaults"
+           android:summary="Resets setting values to defaults"></Preference> 
+       <Preference
+           android:title="Test Settings"
+           android:key="open_test_preference"
+           android:summary="Open test preference screen"></Preference>   
+    </PreferenceScreen>

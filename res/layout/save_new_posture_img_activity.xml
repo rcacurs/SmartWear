@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="45mm"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+    <TextView
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Enter Posture Image File Name"
+        android:textSize="20dp"
+    />
+    <EditText 
+        android:id="@+id/postureIMGNameEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:text=""
+        android:hint="enter posture name"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:id="@+id/savePostureButton"
+            android:onClick="onButtonClickSavePostureButton"/>
+	    <Button
+	        android:layout_width="0dp"
+	        android:layout_weight="1"
+	        android:layout_height="wrap_content"
+	        android:text="@string/close_button_label"
+	        android:id="@+id/closeButton"
+	        android:onClick="onButtonClickClose">
+	    </Button>
+	</LinearLayout>
+    
+</LinearLayout>
