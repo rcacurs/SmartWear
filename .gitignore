@@ -24,7 +24,10 @@ proguard/
 
 # Log Files
 *.log
+
+#eclipse file
 *.project
+*.classpath
 
 #dropbox file
 .dropbox
