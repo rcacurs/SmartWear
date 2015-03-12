@@ -79,7 +79,36 @@ public class Segment {
 			
 		}
 	}
+	/** sets segment current orientation using TRIAD algorithm
+	 * 
+	 * @param sensor sensor of corresponding sensor
+	 */
+	public void setSegmentOrientationTRIAD(Sensor sensor){
+		float[][] rotMat=SensorDataProcessing.getRotationTRIAD(sensor.getAccNorm(), sensor.getMagNorm());
+		// rotate each segment
+		for(int i = 0; i<4; i++){
+			SensorDataProcessing.multiplyMatrix(rotMat, initialCross[i], cross[i]);
+		}
+	}
 	
+	/**
+	 * Sets all segment orientation with triad algorithm defined in segment array
+	 * @param segmentArray array of segments
+	 * @param sensorGrid grid of sensors
+	 */
+	public static void setAllSegmentOrientationsTRIAD(Segment[][] segmentArray, Sensor[][] sensorGrid){
+		for(int i=0; i<segmentArray.length; i++){
+			for(int j=0; j<segmentArray[0].length; j++){
+				segmentArray[i][j].setSegmentOrientation(sensorGrid[i][j]);
+			}
+		}
+	}
+	
+	/**
+	 * Sets all segment orientations defined in segment array
+	 * @param segmentArray
+	 * @param sensorGrid
+	 */
 	public static void setAllSegmentOrientations(Segment[][] segmentArray,Sensor[][] sensorGrid){
 		for(int i=0; i<segmentArray.length; i++){
 			for(int j=0; j<segmentArray[0].length; j++){

@@ -537,4 +537,71 @@ public class SensorDataProcessing {
 		qout[3]=p[0]*q[3]+q[0]*p[3]+p[1]*q[2]-p[2]*q[1];
 	}
 	
+	/**
+	 * Function from matrix and matrix transpose multiplication (A*B'). Note B is transposed before multiplication
+	 * @param A 3x3 matrix as float[][] - A
+	 * @param B 3x3 matrix as float[][] - B
+	 * @return 
+	 */
+	public static float[][] multMatMatT(float[][] A, float[][] B){
+		float[][] res = new float[3][3];
+		for(int i=0; i<3; i++){
+			float[] vec1 = new float[3];
+			for(int z=0; z<3; z++){
+				vec1[z]=A[i][z];
+			}
+			for(int j=0; j<3; j++){
+				float[] vec2 = new float[3];
+				for(int z=0; z<3; z++){
+					vec2[z]=B[j][z];
+				}
+				res[i][j]=dotProduct(vec1, vec2);
+			}
+		}
+		return res;
+	};
+	
+	/**
+	 * Function for rotation matrix estimation with TRIAD algorithm, that aligns
+	 * sensor local reference frame to global reference frame.
+	 * @param acc_data - accelerometer data array of size 3 with normalised accelerometer data
+	 * @param magn_data  - magnetometer data array of size 3 with normalised magnetometer data
+	 * return float[][] - result array  of size [3][3] must be initialised before function call*/
+	public static float[][] getRotationTRIAD(float[] acc_data, float[] magn_data){
+		float[][] result = new float[3][3];
+		
+		if(acc_data.length==3 && magn_data.length==3){
+			float[] Eg = {0, 0, 1};
+			float[] Em = {0.4472f, 0, -0.8944f};
+			float[] s2 = new float[3]; 
+			crossProduct(Eg, Em, s2);
+			normalizeVector(s2);
+			float[] s3 = new float[3];
+			crossProduct(Eg, s2, s3);
+			
+			float[] r2 = new float[2];
+			crossProduct(acc_data, magn_data, r2);
+			normalizeVector(r2);
+			float[] r3 = new float[3];
+			crossProduct(acc_data, r2, r3);
+			
+			float[][] Mmeas = new float[3][3];
+			float[][] Mref = new float[3][3];
+			
+			// filling Mmeas and Mref matrices
+			for(int i=0; i<Mmeas.length; i++){
+				Mmeas[i][0]=acc_data[i];
+				Mmeas[i][1]=r2[i];
+				Mmeas[i][2]=r3[i];
+				
+				Mref[i][0]=Eg[i];
+				Mref[i][1]=s2[i];
+				Mref[i][2]=s3[i];
+				
+				result = multMatMatT(Mref, Mmeas);
+			}
+		}
+		return result;
+	}
+	
 }
