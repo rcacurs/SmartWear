@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.media.MediaPlayer;
 import android.os.Message;
 import android.os.Vibrator;
+import android.util.Log;
 
 public class ProcessingService {
 	private SmartWearApplication application;
@@ -74,12 +75,15 @@ public class ProcessingService {
 			isProcessing=true;
 			isProcessing=true;
 			if(bluetoothService.isConnected()||application.isReadingFromFile()){
-				for(int i=0;i<application.currentStateSegments.length;i++){
-					for(int j=0;j<application.currentStateSegments[0].length;j++){
-						(application.currentStateSegments[i][j]).setSegmentOrientation(application.sensorGridArray[i][j]);
-					
-					}
-				}
+//				for(int i=0;i<application.currentStateSegments.length;i++){
+//					for(int j=0;j<application.currentStateSegments[0].length;j++){
+//						(application.currentStateSegments[i][j]).setSegmentOrientation(application.sensorGridArray[i][j]);
+//					
+//					}
+//				}
+				Segment.setAllSegmentOrientationsTRIAD(application.currentStateSegments, application.sensorGridArray);
+				Log.d("SENSORDATA","ACCELEROMETER DATA:"+application.sensorGridArray[0][0].getAccNormX()+" "+application.sensorGridArray[0][0].getAccNormY()+" "+application.sensorGridArray[0][0].getAccNormZ());
+				Log.d("SENSORDATA","MAGNETOMETER DATA:"+application.sensorGridArray[0][0].getMagRawX()+" "+application.sensorGridArray[0][0].getMagRawY()+" "+application.sensorGridArray[0][0].getMagRawZ());
 				Segment.setSegmentCenters(application.currentStateSegments, (short)application.getReferenceRow(), (short)application.getReferenceCol());
 				Segment.compansateCentersForTilt(application.refferenceStateSegmentsInitial, application.currentStateSegments, application.refferenceStateSegments,application.getReferenceRow(),application.getReferenceCol());
 				application.segmentStateDistances=Segment.compareByCenterDistances(application.refferenceStateSegments, application.currentStateSegments);

@@ -569,7 +569,7 @@ public class SensorDataProcessing {
 	 * return float[][] - result array  of size [3][3] must be initialised before function call*/
 	public static float[][] getRotationTRIAD(float[] acc_data, float[] magn_data){
 		float[][] result = new float[3][3];
-		
+//		float[] magn_data={1, 0, 0};
 		if(acc_data.length==3 && magn_data.length==3){
 			float[] Eg = {0, 0, 1};
 			float[] Em = {0.4472f, 0, -0.8944f};
@@ -579,7 +579,7 @@ public class SensorDataProcessing {
 			float[] s3 = new float[3];
 			crossProduct(Eg, s2, s3);
 			
-			float[] r2 = new float[2];
+			float[] r2 = new float[3];
 			crossProduct(acc_data, magn_data, r2);
 			normalizeVector(r2);
 			float[] r3 = new float[3];
@@ -598,8 +598,8 @@ public class SensorDataProcessing {
 				Mref[i][1]=s2[i];
 				Mref[i][2]=s3[i];
 				
-				result = multMatMatT(Mref, Mmeas);
 			}
+			result = multMatMatT(Mref, Mmeas);
 		}
 		return result;
 	}

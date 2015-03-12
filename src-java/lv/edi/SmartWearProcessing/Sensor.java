@@ -8,9 +8,9 @@ public class Sensor {
 	/** Shows if accelerometer oriented up or down if up, then value true*/
 	private final boolean isOrientationUp;
 	/**integer array that represents raw accelerometer data from sensor*/
-	private short[] rawAccData = new short[3];
+	private float[] rawAccData = new float[3];
 	/**short array that represents raw magnetometer data from sensor*/
-	private short[] rawMagData = new short[3];
+	private float[] rawMagData = new float[3];
 	
 	/** constructs sensor object that represents sensor from sensor grid
 	 * @param identificator integer that represents sensor identifier
@@ -61,7 +61,7 @@ public class Sensor {
 	 * returns raw Z axis value of magnetometer
 	 * @return rawMagData[2]
 	 */
-	public synchronized int getMagRawZ(){
+	public synchronized float getMagRawZ(){
 		return rawMagData[2];
 	}
 	/**returns normalized accelerometer X axis data considering accelerometer orientation in grid*/
@@ -105,7 +105,7 @@ public class Sensor {
 		if(isOrientationUp){
 			return (float) ((magDataX)/(sqrt(pow(magDataX,2)+pow(magDataY,2)+pow(magDataZ,2))));
 		} else{
-			return (float) -((magDataX)/(sqrt(Math.pow(magDataX,2)+pow(magDataY,2)+pow(magDataZ,2))));
+			return (float) -((magDataX)/(sqrt(pow(magDataX,2)+pow(magDataY,2)+pow(magDataZ,2))));
 		}
 	}
 	/**returns normed magnetometer Y axis data considering accelerometer orientation in grid*/
@@ -116,7 +116,7 @@ public class Sensor {
 		if(isOrientationUp){
 			return (float) ((magDataZ)/(sqrt(pow(magDataX,2)+pow(magDataY,2)+pow(magDataZ,2))));
 		} else{
-			return (float) ((magDataZ)/(sqrt(Math.pow(magDataX,2)+pow(magDataY,2)+pow(magDataZ,2))));
+			return (float) ((magDataZ)/(sqrt(pow(magDataX,2)+pow(magDataY,2)+pow(magDataZ,2))));
 		}
 	}
 	/**returns normed magnetometer Z axis data considering accelerometer orientation in grid*/
@@ -127,16 +127,16 @@ public class Sensor {
 		if(isOrientationUp){
 			return (float) (-(magDataY)/(sqrt(pow(magDataX,2)+pow(magDataY,2)+pow(magDataZ,2))));
 		} else{
-			return (float) ((magDataY)/(Math.sqrt(pow(magDataX,2)+pow(magDataY,2)+pow(magDataZ,2))));
+			return (float) ((magDataY)/(sqrt(pow(magDataX,2)+pow(magDataY,2)+pow(magDataZ,2))));
 		}
 	}
 	
 	/**returns array of normed magnetometer data with transformed coordinates*/
 	public synchronized float[] getMagNorm(){
 		float[] data = new float [3];
-		data[0] = getAccNormX();
-		data[1] = getAccNormY();
-		data[2] = getAccNormZ();
+		data[0] = getMagNormX();
+		data[1] = getMagNormY();
+		data[2] = getMagNormZ();
 		return data;
 	}
 	

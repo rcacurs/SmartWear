@@ -99,7 +99,7 @@ public class Segment {
 	public static void setAllSegmentOrientationsTRIAD(Segment[][] segmentArray, Sensor[][] sensorGrid){
 		for(int i=0; i<segmentArray.length; i++){
 			for(int j=0; j<segmentArray[0].length; j++){
-				segmentArray[i][j].setSegmentOrientation(sensorGrid[i][j]);
+				segmentArray[i][j].setSegmentOrientationTRIAD(sensorGrid[i][j]);
 			}
 		}
 	}
