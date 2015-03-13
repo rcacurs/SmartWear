@@ -160,28 +160,29 @@ public class Segment {
 		short NR_ROWS = (short)segmentArray.length;
 		short NR_COLS = (short)segmentArray[0].length;
 		short toBottom=referenceRow;
+		float[][][] tempCentersR = new float[NR_ROWS][NR_COLS][3];
 		while(toBottom>0){
 			toBottom--;
-			segmentArray[toBottom][referenceCol].center[0]=segmentArray[toBottom+1][referenceCol].center[0]+
+			tempCentersR[toBottom][referenceCol][0]=segmentArray[toBottom+1][referenceCol].center[0]+
 														 segmentArray[toBottom+1][referenceCol].cross[2][0]+
 														 segmentArray[toBottom][referenceCol].cross[2][0]; // X coordinate for segment center
-			segmentArray[toBottom][referenceCol].center[1]=segmentArray[toBottom+1][referenceCol].center[1]+
+			tempCentersR[toBottom][referenceCol][1]=segmentArray[toBottom+1][referenceCol].center[1]+
 					 									 segmentArray[toBottom+1][referenceCol].cross[2][1]+
 					 									 segmentArray[toBottom][referenceCol].cross[2][1]; // Y coordinate for segment center
-			segmentArray[toBottom][referenceCol].center[2]=segmentArray[toBottom+1][referenceCol].center[2]+
+			tempCentersR[toBottom][referenceCol][2]=segmentArray[toBottom+1][referenceCol].center[2]+
 														 segmentArray[toBottom+1][referenceCol].cross[2][2]+
 														 segmentArray[toBottom][referenceCol].cross[2][2]; // Z coordinate for segment center
 		}
 		short toTop=referenceRow;
 		while(toTop<(NR_ROWS-1)){
 			toTop++;
-			segmentArray[toTop][referenceCol].center[0]=segmentArray[toTop-1][referenceCol].center[0]+
+			tempCentersR[toTop][referenceCol][0]=segmentArray[toTop-1][referenceCol].center[0]+
 														  segmentArray[toTop-1][referenceCol].cross[0][0]+
 														  segmentArray[toTop][referenceCol].cross[0][0];// X coordinate for segment center		
-			segmentArray[toTop][referenceCol].center[1]=segmentArray[toTop-1][referenceCol].center[1]+
+			tempCentersR[toTop][referenceCol][1]=segmentArray[toTop-1][referenceCol].center[1]+
 					 									  segmentArray[toTop-1][referenceCol].cross[0][1]+
 					 									  segmentArray[toTop][referenceCol].cross[0][1];// Y coordinate for segment center
-			segmentArray[toTop][referenceCol].center[2]=segmentArray[toTop-1][referenceCol].center[2]+
+			tempCentersR[toTop][referenceCol][2]=segmentArray[toTop-1][referenceCol].center[2]+
 														  segmentArray[toTop-1][referenceCol].cross[0][2]+
 														  segmentArray[toTop][referenceCol].cross[0][2];// Z coordinate for segment center											 
 		}
@@ -191,30 +192,61 @@ public class Segment {
 			short toLeft=referenceCol;
 			while(toLeft>0){
 				toLeft--;
-				segmentArray[i][toLeft].center[0]=segmentArray[i][toLeft+1].center[0]+
+				tempCentersR[toLeft][referenceCol][0]=segmentArray[i][toLeft+1].center[0]+
 													segmentArray[i][toLeft+1].cross[3][0]+
 													segmentArray[i][toLeft].cross[3][0]; // X coordinate
-				segmentArray[i][toLeft].center[1]=segmentArray[i][toLeft+1].center[1]+
+				tempCentersR[toLeft][referenceCol][1]=segmentArray[i][toLeft+1].center[1]+
 													segmentArray[i][toLeft+1].cross[3][1]+
 													segmentArray[i][toLeft].cross[3][1]; // Y coordinate
-				segmentArray[i][toLeft].center[2]=segmentArray[i][toLeft+1].center[2]+
+				tempCentersR[toLeft][referenceCol][2]=segmentArray[i][toLeft+1].center[2]+
 													segmentArray[i][toLeft+1].cross[3][2]+
 													segmentArray[i][toLeft].cross[3][2]; // Z coordinate
 			}
 			short toRight=referenceCol;
 			while(toRight<(NR_COLS-1)){
 				toRight++;
-				segmentArray[i][toRight].center[0]=segmentArray[i][toRight-1].center[0]+
+				tempCentersR[toRight][referenceCol][0]=segmentArray[i][toRight-1].center[0]+
 												 segmentArray[i][toRight-1].cross[1][0]+
 												 segmentArray[i][toRight].cross[1][0]; // X coordinate
-				segmentArray[i][toRight].center[1]=segmentArray[i][toRight-1].center[1]+
+				tempCentersR[toLeft][referenceCol][1]=segmentArray[i][toRight-1].center[1]+
 						 						 segmentArray[i][toRight-1].cross[1][1]+
 						 						 segmentArray[i][toRight].cross[1][1]; // Y coordinate
-				segmentArray[i][toRight].center[2]=segmentArray[i][toRight-1].center[2]+
+				tempCentersR[toLeft][referenceCol][2]=segmentArray[i][toRight-1].center[2]+
 						 						 segmentArray[i][toRight-1].cross[1][2]+
 						 						 segmentArray[i][toRight].cross[1][2]; // X coordinate
 			}
 		}
+		
+		float[][][] tempCentersC = new float[NR_ROWS][NR_COLS][3];
+		short toLeft=referenceCol;
+		while(toLeft>0){
+			toLeft--;
+			tempCentersC[referenceRow][toLeft][0]=segmentArray[referenceRow][toLeft+1].center[0]+
+														 segmentArray[referenceRow][toLeft+1].cross[3][0]+
+														 segmentArray[referenceRow][toLeft].cross[3][0]; // X coordinate for segment center
+			tempCentersC[referenceRow][toLeft][1]=segmentArray[referenceRow][toLeft+1].center[1]+
+					 									 segmentArray[referenceRow][toLeft+1].cross[3][1]+
+					 									 segmentArray[referenceRow][toLeft].cross[3][1]; // Y coordinate for segment center
+			tempCentersC[referenceRow][toLeft][2]=segmentArray[referenceRow][toLeft+1].center[2]+
+														 segmentArray[referenceRow][toLeft+1].cross[3][2]+
+														 segmentArray[referenceRow][toLeft].cross[3][2]; // Z coordinate for segment center
+		}
+		short toRight=referenceCol;
+		
+		while(toRight<(NR_COLS-1)){
+			toRight++;
+			tempCentersR[toRight][toRight][0]=segmentArray[toTop-1][referenceCol].center[0]+
+														  segmentArray[toTop-1][referenceCol].cross[0][0]+
+														  segmentArray[toTop][referenceCol].cross[0][0];// X coordinate for segment center		
+			tempCentersR[toTop][referenceCol][1]=segmentArray[toTop-1][referenceCol].center[1]+
+					 									  segmentArray[toTop-1][referenceCol].cross[0][1]+
+					 									  segmentArray[toTop][referenceCol].cross[0][1];// Y coordinate for segment center
+			tempCentersR[toTop][referenceCol][2]=segmentArray[toTop-1][referenceCol].center[2]+
+														  segmentArray[toTop-1][referenceCol].cross[0][2]+
+														  segmentArray[toTop][referenceCol].cross[0][2];// Z coordinate for segment center											 
+		}
+		
+		
 	
 		
 	}

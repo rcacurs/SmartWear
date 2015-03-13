@@ -476,7 +476,7 @@ public class SensorDataProcessing {
 	 * @param index index of accelerometer
 	 * @param ROWS number of rows in sensor grid
 	 * @param COLS number of columns in sensor grid
-	 * @return indexes[] returns array of indexes index[0] - row index, index[1] cololcumn index
+	 * @return indexes[] returns array of indexes index[0] - row index, index[1] column index
 	 */
 	
 	public static int[] getIndexes(int index, int ROWS, int COLS){
@@ -561,6 +561,16 @@ public class SensorDataProcessing {
 		return res;
 	};
 	
+	/** Translates vector by vector. input vector is changes by vector
+	 * inputVec vector that are to be translated
+	 * offset - array of length 3 representing offset
+	 * translated - translated vector, must be initialised before function call
+	 */
+	public static void translateVec(float inputVec[], float[] offset, float[] translated){
+		translated[0]=inputVec[0]+offset[0];
+		translated[1]=inputVec[1]+offset[1];
+		translated[2]=inputVec[2]+offset[2];
+	}
 	/**
 	 * Function for rotation matrix estimation with TRIAD algorithm, that aligns
 	 * sensor local reference frame to global reference frame.

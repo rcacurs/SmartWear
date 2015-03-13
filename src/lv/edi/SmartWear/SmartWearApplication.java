@@ -37,6 +37,9 @@ public class SmartWearApplication extends Application implements OnSharedPrefere
 	private static final String LOG_FOLDER = "LogFiles";
 	private static final String POSTURE_FOLDER = "Postures";
 	private static final String POSTURE_IMG_FOLDER = "PosturesIMG";
+	private static final String CALIBRATION_DATA_FOLDER = "CalibrationData";
+	private static final String CALIBRATION_DATA_FILE_NAME = "calibration_data.csv";
+	
 	static final String DEFAULT_POSTURE_FILE = "DefaultPosture.dat";
 	private short battery_level=100;
 	public static final byte NR_OF_SENSORS = 63; // number of sensors in grid
@@ -124,6 +127,7 @@ public class SmartWearApplication extends Application implements OnSharedPrefere
 	private File sessionLogDirectory;
 	private File postureDirectory;
 	private File postureDirectoryIMG;
+	private File calibrationDataFile;
 	private Calendar calendar;
 	private boolean stateSaved=false;
 	protected Handler statisticsHandler;
@@ -148,6 +152,8 @@ public class SmartWearApplication extends Application implements OnSharedPrefere
 		sessionLogDirectory = new File(Environment.getExternalStorageDirectory() + "/"+MAIN_FILE_FOLDER+"/"+SESSION_LOG_FOLDER);
 		postureDirectory = new File(Environment.getExternalStorageDirectory()+"/"+MAIN_FILE_FOLDER+"/"+POSTURE_FOLDER);
 		postureDirectoryIMG = new File(Environment.getExternalStorageDirectory()+"/"+MAIN_FILE_FOLDER+"/"+POSTURE_IMG_FOLDER);
+		calibrationDataFile = new File(Environment.getExternalStorageDirectory()+"/"+MAIN_FILE_FOLDER+"/"+CALIBRATION_DATA_FOLDER+"/"+CALIBRATION_DATA_FILE_NAME);
+		
 		if(!logDirectory.exists()){
 		   logDirectory.mkdirs(); //directory is created;
 		}
@@ -347,8 +353,17 @@ public class SmartWearApplication extends Application implements OnSharedPrefere
 		getPosturePointsFromFile(DEFAULT_POSTURE_FILE, refferenceStateSegmentsInitial);
 		createNewDataSetForPlot();
 		
-
-	
+		// load calibration data if it exists
+		if(calibrationDataFile.exists()){
+			Log.d("CALIB_DATA", "WE HAVE CALIBRATION DATA");
+			try {
+				Sensor.setGridMagnetometerCalibData(calibrationDataFile, sensorGridArray);
+			} catch (IOException e) {
+				Log.d("CLIB_DATA", "PROBLEM LOADING CALIBRATION VALUES FROM CALIBRATION FILE");
+			}
+		} else{
+			Log.d("CALIB_DATA", "WE DON'T HAVE CALIBRATION DATA");
+		}
 	}
 	
 	public boolean isVibrateFeedbackOn(){

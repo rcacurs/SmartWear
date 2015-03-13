@@ -1,5 +1,12 @@
 package lv.edi.SmartWearProcessing;
 import static java.lang.Math.*;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+
+import android.util.Log;
 /**This class represents sensor object in sensor grid
  * @author Richards Cacurs*/
 public class Sensor {
@@ -11,6 +18,9 @@ public class Sensor {
 	private float[] rawAccData = new float[3];
 	/**short array that represents raw magnetometer data from sensor*/
 	private float[] rawMagData = new float[3];
+	private float[] calibratedMagData = new float[3];
+	private float[][] magCalibMat;
+	private float[] magCalibOffset;
 	
 	/** constructs sensor object that represents sensor from sensor grid
 	 * @param identificator integer that represents sensor identifier
@@ -99,20 +109,41 @@ public class Sensor {
 	}
 	/**return normed magnetometer X axis data considering magnetometer orientation in grid*/
 	public synchronized float getMagNormX(){
-		float magDataX=rawMagData[0]/1100;
-		float magDataY=rawMagData[1]/1100;
-		float magDataZ=rawMagData[2]/980;
+		float magDataX;
+		float magDataY;
+		float magDataZ;
+	
+		if(calibratedMagData==null){
+			magDataX=rawMagData[0];
+			magDataY=rawMagData[1];
+			magDataZ=rawMagData[2];
+		} else{
+			magDataX=calibratedMagData[0];
+			magDataY=calibratedMagData[1];
+			magDataZ=calibratedMagData[2];
+		}
+		
 		if(isOrientationUp){
-			return (float) ((magDataX)/(sqrt(pow(magDataX,2)+pow(magDataY,2)+pow(magDataZ,2))));
+			return (float) ((magDataY)/(sqrt(pow(magDataX,2)+pow(magDataY,2)+pow(magDataZ,2))));
 		} else{
 			return (float) -((magDataX)/(sqrt(pow(magDataX,2)+pow(magDataY,2)+pow(magDataZ,2))));
 		}
 	}
 	/**returns normed magnetometer Y axis data considering accelerometer orientation in grid*/
 	public synchronized float getMagNormY(){
-		float magDataX=rawMagData[0]/1100;
-		float magDataY=rawMagData[1]/1100;
-		float magDataZ=rawMagData[2]/980;
+		float magDataX;
+		float magDataY;
+		float magDataZ;
+	
+		if(calibratedMagData==null){
+			magDataX=rawMagData[0];
+			magDataY=rawMagData[1];
+			magDataZ=rawMagData[2];
+		} else{
+			magDataX=calibratedMagData[0];
+			magDataY=calibratedMagData[1];
+			magDataZ=calibratedMagData[2];
+		}
 		if(isOrientationUp){
 			return (float) ((magDataZ)/(sqrt(pow(magDataX,2)+pow(magDataY,2)+pow(magDataZ,2))));
 		} else{
@@ -121,9 +152,19 @@ public class Sensor {
 	}
 	/**returns normed magnetometer Z axis data considering accelerometer orientation in grid*/
 	public synchronized float getMagNormZ(){
-		float magDataX=rawMagData[0]/1100;
-		float magDataY=rawMagData[1]/1100;
-		float magDataZ=rawMagData[2]/980;
+		float magDataX;
+		float magDataY;
+		float magDataZ;
+	
+		if(calibratedMagData==null){
+			magDataX=rawMagData[0];
+			magDataY=rawMagData[1];
+			magDataZ=rawMagData[2];
+		} else{
+			magDataX=calibratedMagData[0];
+			magDataY=calibratedMagData[1];
+			magDataZ=calibratedMagData[2];
+		}
 		if(isOrientationUp){
 			return (float) (-(magDataY)/(sqrt(pow(magDataX,2)+pow(magDataY,2)+pow(magDataZ,2))));
 		} else{
@@ -154,6 +195,88 @@ public class Sensor {
 		rawMagData[0]=im;
 		rawMagData[1]=jm;
 		rawMagData[2]=km;
+		
+		if((magCalibMat!=null)&&(magCalibOffset!=null)){
+			calibratedMagData=getMagnCalibratedData();
+			Log.d("CALIB_DATA", "CALIBRATING RAW SENSRO DATA");
+		} else{
+			calibratedMagData=null;
+		}
+	}
+	/**
+	 * Returns calibrated magnetometer data. Calibration data must be set for sensor
+	 * @return float[] calibration data
+	 */
+	public synchronized float[] getMagnCalibratedData(){
+		float[] magnCalibData = new float[3];
+		SensorDataProcessing.translateVec(rawMagData, magCalibOffset, magnCalibData);
+		float[] magnCalibDataSc = new float[3];
+		SensorDataProcessing.multiplyMatrix(magCalibMat, magnCalibData, magnCalibDataSc);
+		return magnCalibDataSc;
+	}
+	
+	/**
+	 * Updates magnetometer calibration data
+	 * @param calibData - array consisting of magnetometer calibration data. Array must be of size 12 and arrays first 9 elements are scaling matrix
+	 * elements in col-maj order, and last 3 elements are offsets
+	 */
+	public synchronized void updateMagnCalibrationData(float[] calibData){
+		magCalibMat = new float[3][3];
+		magCalibOffset = new float[3];
+		
+		magCalibMat[0][0]=calibData[0];
+		magCalibMat[1][0]=calibData[1];
+		magCalibMat[2][0]=calibData[2];
+		magCalibMat[0][1]=calibData[3];
+		magCalibMat[1][1]=calibData[4];
+		magCalibMat[2][1]=calibData[5];
+		magCalibMat[0][2]=calibData[6];
+		magCalibMat[1][2]=calibData[7];
+		magCalibMat[2][2]=calibData[8];
+		magCalibOffset[0]=calibData[9];
+		magCalibOffset[1]=calibData[10];
+		magCalibOffset[2]=calibData[11];
+		
+	}
+	
+	/**
+	 * Sets magnetometer calibration data for all GRID
+	 * @param calibDataFile .csv file containing calibration data
+	 * @param sensorGrid sensor grid array
+	 * @throws IOException 
+	 */
+	public static void  setGridMagnetometerCalibData(File calibDataFile, Sensor[][] sensorGrid) throws IOException{
+		BufferedReader breader = new BufferedReader(new FileReader(calibDataFile));
+		String str = breader.readLine();
+		int numberOfSensors;
+		try {
+			numberOfSensors = Integer.parseInt(str);
+		} catch (NumberFormatException e) {
+			breader.close();
+			return;
+		}
+		
+		if(numberOfSensors==(sensorGrid.length*sensorGrid[0].length)){
+			for(int i=0; i<numberOfSensors; i++){
+				int[] sensorIndexes = SensorDataProcessing.getIndexes(i, sensorGrid.length, sensorGrid[0].length);
+				str=breader.readLine();
+				String[] elements = str.split(",");
+				if(elements.length==12){
+					float[] calibData = new float[12];
+					for(int j=0; j<12; j++){
+						calibData[j]=Float.parseFloat(elements[j]);
+					}
+					sensorGrid[sensorIndexes[0]][sensorIndexes[1]].updateMagnCalibrationData(calibData);
+				}else{
+					breader.close();
+					throw new IOException();
+				}
+			}
+		breader.close();
+		}else{
+			breader.close();
+			return;
+		}
 	}
 	
 	public static String printAccelerometerData(Sensor sensorGrid[][]){
