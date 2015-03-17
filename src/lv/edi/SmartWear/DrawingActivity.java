@@ -36,7 +36,7 @@ public class DrawingActivity extends Activity {
 	private static float ROTATION_CONSTANT=0.01f;
 	private float rotationAngleZ=0;
 	private float rotationAngleY=0;
-	private final float[] INITIAL_VECT = {0, -30, 0};
+	private final float[] INITIAL_VECT = {0, -40, 0};
 	private final float[] INITIAL_UP_VECT = {0, 0, 1}; // CAMERA UP VECTOR
 	//private Activity currentActivity;
 	private GLSurfaceView view;

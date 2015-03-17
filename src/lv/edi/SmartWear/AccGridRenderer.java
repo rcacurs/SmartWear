@@ -8,7 +8,7 @@ import android.opengl.GLU;
 class AccGridRenderer implements GLSurfaceView.Renderer 
 { 
 	private SmartWearApplication application;
-	volatile public double viewPointVector[] = {0, -30, 0};
+	volatile public double viewPointVector[] = {0, -40, 0};
 	volatile public double cameraUpVector[] = {0, 0, 1};
 	
 	public AccGridRenderer(boolean useTranslucentBackground, SmartWearApplication app) { 
