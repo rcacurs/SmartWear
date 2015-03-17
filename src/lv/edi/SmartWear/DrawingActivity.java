@@ -196,16 +196,23 @@ public class DrawingActivity extends Activity {
 		       		 
 		       		 //rotate around x axis from initial vector position
 		       		 // temporary vector for  camera up vector
-		       		 SensorDataProcessing.quatRotate(quaternionY, INITIAL_VECT, temp);
-		       		 SensorDataProcessing.quatRotate(quaternionY, INITIAL_UP_VECT, tempUp);
+		       		 float[] offset = application.currentStateSegments[SmartWearApplication.GRID_ROWS/2][SmartWearApplication.GRID_COLS/2].center;
+		       		 float[] initialVectOffset = new float[3];
+		       		 float[] initialUpVectOffset = new float[3];
+		       		 for(int i=0; i<3;i++){
+		       			initialVectOffset[i]=INITIAL_VECT[i]-offset[i];
+		       			initialUpVectOffset[i]=INITIAL_UP_VECT[i]-offset[i];
+		       		 }
+		       		 SensorDataProcessing.quatRotate(quaternionY, initialVectOffset, temp);
+		       		 SensorDataProcessing.quatRotate(quaternionY, initialUpVectOffset, tempUp);
 
 		       		 //rotate around Z axis 
 		       		 SensorDataProcessing.quatRotate(quaternionZ, temp, temp2);
 		       		 SensorDataProcessing.quatRotate(quaternionZ, tempUp, tempUp2);
 		       		 // update rotated vector coordinates
 		       		 for(int i = 0; i<renderer.viewPointVector.length;i++){
-		       			 renderer.viewPointVector[i]=temp2[i];
-		       			 renderer.cameraUpVector[i]=tempUp2[i];
+		       			 renderer.viewPointVector[i]=temp2[i]+offset[i];
+		       			 renderer.cameraUpVector[i]=tempUp2[i]+offset[i];
 		       		 }           
 	        }
 

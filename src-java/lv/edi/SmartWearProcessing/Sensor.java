@@ -224,18 +224,19 @@ public class Sensor {
 		magCalibMat = new float[3][3];
 		magCalibOffset = new float[3];
 		
-		magCalibMat[0][0]=calibData[0];
-		magCalibMat[1][0]=calibData[1];
-		magCalibMat[2][0]=calibData[2];
-		magCalibMat[0][1]=calibData[3];
-		magCalibMat[1][1]=calibData[4];
-		magCalibMat[2][1]=calibData[5];
-		magCalibMat[0][2]=calibData[6];
-		magCalibMat[1][2]=calibData[7];
-		magCalibMat[2][2]=calibData[8];
-		magCalibOffset[0]=calibData[9];
-		magCalibOffset[1]=calibData[10];
-		magCalibOffset[2]=calibData[11];
+		magCalibOffset[0]=calibData[0];
+		magCalibOffset[1]=calibData[1];
+		magCalibOffset[2]=calibData[2];
+		
+		magCalibMat[0][0]=calibData[3];
+		magCalibMat[1][0]=calibData[4];
+		magCalibMat[2][0]=calibData[5];
+		magCalibMat[0][1]=calibData[6];
+		magCalibMat[1][1]=calibData[7];
+		magCalibMat[2][1]=calibData[8];
+		magCalibMat[0][2]=calibData[9];
+		magCalibMat[1][2]=calibData[10];
+		magCalibMat[2][2]=calibData[11];
 		
 	}
 	
@@ -264,11 +265,12 @@ public class Sensor {
 				if(elements.length==12){
 					float[] calibData = new float[12];
 					for(int j=0; j<12; j++){
-						calibData[j]=Float.parseFloat(elements[j]);
+						calibData[j]=(float)Double.parseDouble(elements[j]);
 					}
 					sensorGrid[sensorIndexes[0]][sensorIndexes[1]].updateMagnCalibrationData(calibData);
 				}else{
 					breader.close();
+					
 					throw new IOException();
 				}
 			}
