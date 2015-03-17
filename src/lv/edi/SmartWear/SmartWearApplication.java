@@ -61,12 +61,10 @@ public class SmartWearApplication extends Application implements OnSharedPrefere
 	Sensor[] sensorArray = new Sensor[NR_OF_SENSORS]; // array of Sensor object refferences
 	
 	
-	// sensors in sensor grid are counted from upper left sensor
-	// 
-	//sensor[0][0] sensor[0][1] sensor[0][2] .....
-	//sensor[1][0] sensor[1][1] sensor[1][2] ....
-	//........................................
-	//.....................................
+	// sensors in sensor grid are counted from lower right sensor
+	// ..........................................
+	//.........................sensorArray[0][1]  sensorArray[0][0]
+
 	Sensor[][] sensorGridArray = new Sensor[GRID_ROWS][GRID_COLS]; // array of Sensor object refferences ordered in array that represents grid
 	
 	Segment[][] currentStateSegments = new Segment[GRID_ROWS][GRID_COLS];
@@ -287,7 +285,7 @@ public class SmartWearApplication extends Application implements OnSharedPrefere
 		int[] sensorIndexes;
 		for(int i=0;i<NR_OF_SENSORS;i++){
 			sensorIndexes=SensorDataProcessing.getIndexes(i, GRID_ROWS, GRID_COLS);// get array of sensor grid indexes
-			if((sensorIndexes[1]%2==0)^(GRID_COLS%2==0)){
+			if(sensorIndexes[1]%2==0){
 				sensorArray[i]=new Sensor(i,true);	// create sensor object
 				sensorGridArray[sensorIndexes[0]][sensorIndexes[1]]=sensorArray[i]; // save reference of sensor object in sensor Grid Array
 			} else{

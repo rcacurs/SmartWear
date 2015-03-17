@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-import android.util.Log;
+//import android.util.Log;
 /**This class represents sensor object in sensor grid
  * @author Richards Cacurs*/
 public class Sensor {
@@ -79,7 +79,7 @@ public class Sensor {
 		if(isOrientationUp){
 			return (float) ((rawAccData[0])/(sqrt(pow(rawAccData[0],2)+pow(rawAccData[1],2)+pow(rawAccData[2],2))));
 		} else{
-			return (float) -((rawAccData[0])/(sqrt(Math.pow(rawAccData[0],2)+pow(rawAccData[1],2)+pow(rawAccData[2],2))));
+			return (float) -((rawAccData[0])/(sqrt(pow(rawAccData[0],2)+pow(rawAccData[1],2)+pow(rawAccData[2],2))));
 		}
 	}
 	
@@ -88,7 +88,7 @@ public class Sensor {
 		if(isOrientationUp){
 			return (float) ((rawAccData[2])/(sqrt(pow(rawAccData[0],2)+pow(rawAccData[1],2)+pow(rawAccData[2],2))));
 		} else{
-			return (float) ((rawAccData[2])/(sqrt(Math.pow(rawAccData[0],2)+pow(rawAccData[1],2)+pow(rawAccData[2],2))));
+			return (float) ((rawAccData[2])/(sqrt(pow(rawAccData[0],2)+pow(rawAccData[1],2)+pow(rawAccData[2],2))));
 		}
 	}
 	/**returns normed accelerometer Z axis data considering accelerometer orientation in grid*/
@@ -96,7 +96,7 @@ public class Sensor {
 		if(isOrientationUp){
 			return (float) (-(rawAccData[1])/(sqrt(pow(rawAccData[0],2)+pow(rawAccData[1],2)+pow(rawAccData[2],2))));
 		} else{
-			return (float) ((rawAccData[1])/(Math.sqrt(pow(rawAccData[0],2)+pow(rawAccData[1],2)+pow(rawAccData[2],2))));
+			return (float) ((rawAccData[1])/(sqrt(pow(rawAccData[0],2)+pow(rawAccData[1],2)+pow(rawAccData[2],2))));
 		}
 	}
 	/**returns array of normed accelerometer data with transformed coordinates*/
@@ -124,7 +124,7 @@ public class Sensor {
 		}
 		
 		if(isOrientationUp){
-			return (float) ((magDataY)/(sqrt(pow(magDataX,2)+pow(magDataY,2)+pow(magDataZ,2))));
+			return (float) ((magDataX)/(sqrt(pow(magDataX,2)+pow(magDataY,2)+pow(magDataZ,2))));
 		} else{
 			return (float) -((magDataX)/(sqrt(pow(magDataX,2)+pow(magDataY,2)+pow(magDataZ,2))));
 		}
@@ -198,7 +198,7 @@ public class Sensor {
 		
 		if((magCalibMat!=null)&&(magCalibOffset!=null)){
 			calibratedMagData=getMagnCalibratedData();
-			Log.d("CALIB_DATA", "CALIBRATING RAW SENSRO DATA");
+			//Log.d("CALIB_DATA", "CALIBRATING RAW SENSRO DATA");
 		} else{
 			calibratedMagData=null;
 		}

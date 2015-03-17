@@ -304,12 +304,9 @@ public class ProcessingActivity extends Activity implements OnGestureListener, O
 					application.refferenceStateSegmentsInitial[application.getReferenceRow()][application.getReferenceCol()].center[0]=0;
 					application.refferenceStateSegmentsInitial[application.getReferenceRow()][application.getReferenceCol()].center[1]=0;
 					application.refferenceStateSegmentsInitial[application.getReferenceRow()][application.getReferenceCol()].center[2]=0;
-					for(int i=0;i<application.refferenceStateSegments.length;i++){
-						for(int j=0;j<application.refferenceStateSegments[0].length;j++){
-							(application.refferenceStateSegments[i][j]).setSegmentOrientation(application.sensorGridArray[i][j]);
-							(application.refferenceStateSegmentsInitial[i][j]).setSegmentOrientation(application.sensorGridArray[i][j]);
-						}
-					}
+
+					Segment.setAllSegmentOrientationsTRIAD(application.refferenceStateSegments, application.sensorGridArray);
+					Segment.setAllSegmentOrientationsTRIAD(application.refferenceStateSegmentsInitial, application.sensorGridArray);
 					
 					Segment.setSegmentCenters(application.refferenceStateSegments, (short)application.getReferenceRow(), (short)application.getReferenceCol());
 					Segment.setSegmentCenters(application.refferenceStateSegmentsInitial, (short)application.getReferenceRow(), (short)application.getReferenceCol());

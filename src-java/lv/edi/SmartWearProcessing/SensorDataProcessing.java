@@ -481,21 +481,27 @@ public class SensorDataProcessing {
 	
 	public static int[] getIndexes(int index, int ROWS, int COLS){
 		int indexes[]={0, 0};  // defines indexes array
-		for(int c=0;c<=COLS-2;c++){
-			if ((int)(index/(ROWS*COLS-ROWS*(c+1)))>0){
-				if((c%2==0)^(COLS%2==0)){
-					indexes[0]=index-(ROWS*COLS-(c+1)*ROWS);// row
-					indexes[1]=c;							// col
-					return indexes;
-				}else{
-					indexes[0]=(ROWS-1)-(index-(ROWS*COLS-(c+1)*ROWS));
-					indexes[1]=c;
-					return indexes;
-				}
-			}
+//		for(int c=0;c<=COLS-2;c++){
+//			if ((int)(index/(ROWS*COLS-ROWS*(c+1)))>0){
+//				if((c%2==0)^(COLS%2==0)){
+//					indexes[0]=index-(ROWS*COLS-(c+1)*ROWS);// row
+//					indexes[1]=c;							// col
+//					return indexes;
+//				}else{
+//					indexes[0]=(ROWS-1)-(index-(ROWS*COLS-(c+1)*ROWS));
+//					indexes[1]=c;
+//					return indexes;
+//				}
+//			}
+//		}
+//		indexes[1]=COLS-1;
+//		indexes[0]=index;
+		indexes[1]=index/ROWS;
+		if((indexes[1]%2)==0){
+			indexes[0]=index % ROWS;
+		} else{
+			indexes[0]=ROWS-1-index%ROWS;
 		}
-		indexes[1]=COLS-1;
-		indexes[0]=index;
 		return indexes;	
 	}
 	
