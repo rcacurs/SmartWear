@@ -12,12 +12,17 @@ import java.io.IOException;
 public class Sensor {
 	/** represents unique accelerometer identifier*/
 	private final int identifier;
+	private boolean filter = true; // if data should be filtered
 	/** Shows if accelerometer oriented up or down if up, then value true*/
 	private final boolean isOrientationUp;
 	/**integer array that represents raw accelerometer data from sensor*/
 	private float[] rawAccData = new float[3];
+	private float[] rawAccFilteredData = new float[3];
+	private float[] P_xyz_acc=new float[3]; // for Kalman filter
 	/**short array that represents raw magnetometer data from sensor*/
 	private float[] rawMagData = new float[3];
+	private float[] rawMagFilteredData = new float[3];
+	private float[] P_xyz_mag = new float[3]; // for Kalman filter
 	private float[] calibratedMagData = new float[3];
 	private float[][] magCalibMat;
 	private float[] magCalibOffset;
@@ -76,27 +81,58 @@ public class Sensor {
 	}
 	/**returns normalized accelerometer X axis data considering accelerometer orientation in grid*/
 	public synchronized float getAccNormX(){
-		if(isOrientationUp){
-			return (float) ((rawAccData[0])/(sqrt(pow(rawAccData[0],2)+pow(rawAccData[1],2)+pow(rawAccData[2],2))));
+		float[] accData = new float[3];
+		if(filter){
+			accData[0]=rawAccFilteredData[0];
+			accData[1]=rawAccFilteredData[1];
+			accData[2]=rawAccFilteredData[2];
 		} else{
-			return (float) -((rawAccData[0])/(sqrt(pow(rawAccData[0],2)+pow(rawAccData[1],2)+pow(rawAccData[2],2))));
+			accData[0]=rawAccData[0];
+			accData[1]=rawAccData[1];
+			accData[2]=rawAccData[2];
+		}
+		
+		if(isOrientationUp){
+			return (float) ((accData[0])/(sqrt(pow(accData[0],2)+pow(accData[1],2)+pow(accData[2],2))));
+		} else{
+			return (float) -((accData[0])/(sqrt(pow(accData[0],2)+pow(accData[1],2)+pow(accData[2],2))));
 		}
 	}
 	
 	/**returns normed accelerometer Y axis data considering accelerometer orientation in grid*/
 	public synchronized float getAccNormY(){
-		if(isOrientationUp){
-			return (float) ((rawAccData[2])/(sqrt(pow(rawAccData[0],2)+pow(rawAccData[1],2)+pow(rawAccData[2],2))));
+		float[] accData = new float[3];
+		if(filter){
+			accData[0]=rawAccFilteredData[0];
+			accData[1]=rawAccFilteredData[1];
+			accData[2]=rawAccFilteredData[2];
 		} else{
-			return (float) ((rawAccData[2])/(sqrt(pow(rawAccData[0],2)+pow(rawAccData[1],2)+pow(rawAccData[2],2))));
+			accData[0]=rawAccData[0];
+			accData[1]=rawAccData[1];
+			accData[2]=rawAccData[2];
+		}
+		if(isOrientationUp){
+			return (float) ((accData[2])/(sqrt(pow(accData[0],2)+pow(accData[1],2)+pow(accData[2],2))));
+		} else{
+			return (float) ((accData[2])/(sqrt(pow(accData[0],2)+pow(accData[1],2)+pow(accData[2],2))));
 		}
 	}
 	/**returns normed accelerometer Z axis data considering accelerometer orientation in grid*/
 	public synchronized float getAccNormZ(){
-		if(isOrientationUp){
-			return (float) (-(rawAccData[1])/(sqrt(pow(rawAccData[0],2)+pow(rawAccData[1],2)+pow(rawAccData[2],2))));
+		float[] accData = new float[3];
+		if(filter){
+			accData[0]=rawAccFilteredData[0];
+			accData[1]=rawAccFilteredData[1];
+			accData[2]=rawAccFilteredData[2];
 		} else{
-			return (float) ((rawAccData[1])/(sqrt(pow(rawAccData[0],2)+pow(rawAccData[1],2)+pow(rawAccData[2],2))));
+			accData[0]=rawAccData[0];
+			accData[1]=rawAccData[1];
+			accData[2]=rawAccData[2];
+		}
+		if(isOrientationUp){
+			return (float) (-(accData[1])/(sqrt(pow(accData[0],2)+pow(accData[1],2)+pow(accData[2],2))));
+		} else{
+			return (float) ((accData[1])/(sqrt(pow(accData[0],2)+pow(accData[1],2)+pow(accData[2],2))));
 		}
 	}
 	/**returns array of normed accelerometer data with transformed coordinates*/
@@ -113,14 +149,20 @@ public class Sensor {
 		float magDataY;
 		float magDataZ;
 	
-		if(calibratedMagData==null){
-			magDataX=rawMagData[0];
-			magDataY=rawMagData[1];
-			magDataZ=rawMagData[2];
+		if(filter){
+			magDataX=rawMagFilteredData[0];
+			magDataY=rawMagFilteredData[1];
+			magDataZ=rawMagFilteredData[2];
 		} else{
-			magDataX=calibratedMagData[0];
-			magDataY=calibratedMagData[1];
-			magDataZ=calibratedMagData[2];
+			if(calibratedMagData!=null){
+				magDataX=calibratedMagData[0];
+				magDataY=calibratedMagData[1];
+				magDataZ=calibratedMagData[2];
+			} else{
+				magDataX=rawMagData[0];
+				magDataY=rawMagData[1];
+				magDataZ=rawMagData[2];
+			}
 		}
 		
 		if(isOrientationUp){
@@ -181,7 +223,7 @@ public class Sensor {
 		return data;
 	}
 	
-	/**changes sensor raw acceleration data field array rawAccData[3]
+	/**changes raw sensor data fields  for accelerometer and magnetometer sensor array rawAccData[3]
 	 * @param i - accelerometer X axis raw data
 	 * @param j - accelerometer Y axis raw data
 	 * @param k - accelerometer Z axis raw data
@@ -202,7 +244,17 @@ public class Sensor {
 		} else{
 			calibratedMagData=null;
 		}
+		// updates filtered sensor data
+		if(filter){
+			SensorDataProcessing.kalmanFilter(rawAccData, rawAccFilteredData, P_xyz_acc, 0.2f, 1f);
+			if(calibratedMagData!=null){
+				SensorDataProcessing.kalmanFilter(calibratedMagData, rawMagFilteredData, P_xyz_mag, 0.2f, 1f);
+			} else{
+				SensorDataProcessing.kalmanFilter(rawMagData, rawMagFilteredData, P_xyz_mag, 0.2f, 1f);
+			}
+		}
 	}
+
 	/**
 	 * Returns calibrated magnetometer data. Calibration data must be set for sensor
 	 * @return float[] calibration data

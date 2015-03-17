@@ -620,4 +620,23 @@ public class SensorDataProcessing {
 		return result;
 	}
 	
+	/**
+	 * Method performs Kalman filtering on specified data
+	 * @param float array of length 3 representing 3 axis sensor data
+	 * @param outputFilteredData in this array output result will be stored. Previous value is used to compute current value
+	 * @param P_xyz probabilities array of length array which is changed after each iteration
+	 * @param Q Kalman filter Q parameter
+	 * @param Delta Kalman filter delta parameter
+	 */
+	public static void kalmanFilter(float[] inpuRawData, float[] outputFilteredData, float[] P_xyz, float Q, float delta){
+		float Pn;
+		float K;
+		for(int i=0; i<3; i++){
+			Pn=P_xyz[i]+Q;
+			K=Pn/(Pn+delta);
+			outputFilteredData[i]=outputFilteredData[i]+K*(inpuRawData[i]-outputFilteredData[i]);
+			P_xyz[i]=(1-K)*Pn;
+		}
+	}
+	
 }
