@@ -201,10 +201,9 @@ public class DrawingActivity extends Activity {
 		       		 float[] initialUpVectOffset = new float[3];
 		       		 for(int i=0; i<3;i++){
 		       			initialVectOffset[i]=INITIAL_VECT[i]-offset[i];
-		       			initialUpVectOffset[i]=INITIAL_UP_VECT[i]-offset[i];
 		       		 }
 		       		 SensorDataProcessing.quatRotate(quaternionY, initialVectOffset, temp);
-		       		 SensorDataProcessing.quatRotate(quaternionY, initialUpVectOffset, tempUp);
+		       		 SensorDataProcessing.quatRotate(quaternionY, INITIAL_UP_VECT, tempUp);
 
 		       		 //rotate around Z axis 
 		       		 SensorDataProcessing.quatRotate(quaternionZ, temp, temp2);
@@ -212,7 +211,7 @@ public class DrawingActivity extends Activity {
 		       		 // update rotated vector coordinates
 		       		 for(int i = 0; i<renderer.viewPointVector.length;i++){
 		       			 renderer.viewPointVector[i]=temp2[i]+offset[i];
-		       			 renderer.cameraUpVector[i]=tempUp2[i]+offset[i];
+		       			 renderer.cameraUpVector[i]=tempUp2[i];
 		       		 }           
 	        }
 
