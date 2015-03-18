@@ -150,12 +150,21 @@ public class BluetoothService {
 										if(bytes_received>=bytes_in_packet){ // if we received 7 bytes, then start to from packet 
 											bytes_received = 0; // resetting received byte counter
 											if(packet[0]<SmartWearApplication.NR_OF_SENSORS){ // if received data packet
-												application.sensorArray[packet[0]].updateSensorData((short)(packet[1]*256+packet[2]), // forming accelerometer x data from two received data bytes
-																									(short)(packet[3]*256+packet[4]), // forming accelerometer y data from two received data bytes
-																									(short)(packet[5]*256+packet[6]), // forming accelerometer z data from two received data bytes
-																									(short)(packet[7]*256+packet[8]), // forming magnetometer  x data from two received data bytes
-																									(short)(packet[9]*256+packet[10]),// forming magnetometer  y data from two received data bytes
-																									(short)(packet[11]*256+packet[12]));// forming magnetometer z data from two recieved data bytes
+												short accx = (short)(packet[1]*256+packet[2]);
+												short accy = (short)(packet[3]*256+packet[4]);
+												short accz = (short)(packet[5]*256+packet[6]);
+												short magx = (short)(packet[7]*256+packet[8]);
+												short magy = (short)(packet[9]*256+packet[10]);
+												short magz = (short)(packet[11]*256+packet[12]);
+												double accMagnitude = Math.sqrt(Math.pow(accx, 2)+Math.pow(accy, 2)+Math.pow(accz, 2));
+												if(((accMagnitude<20800)&&(accMagnitude>11000))){
+												application.sensorArray[packet[0]].updateSensorData(accx, // forming accelerometer x data from two received data bytes
+																									accy, // forming accelerometer y data from two received data bytes
+																									accz, // forming accelerometer z data from two received data bytes
+																									magx, // forming magnetometer  x data from two received data bytes
+																									magy,// forming magnetometer  y data from two received data bytes
+																									magz);// forming magnetometer z data from two recieved data bytes
+												}
 											} else{// if received battery status packet
 												short battery_level_raw=(short)(packet[1]*256+packet[2]);
 												double battery_level=(((battery_level_raw)-730)/294.0)*100;
