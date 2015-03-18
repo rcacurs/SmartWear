@@ -82,10 +82,11 @@ public class ProcessingService {
 //					}
 //				}
 				Segment.setAllSegmentOrientationsTRIAD(application.currentStateSegments, application.sensorGridArray);
+				application.currentStateRot=SensorDataProcessing.getRotationTRIAD(application.sensorGridArray[application.getReferenceRow()][application.getReferenceCol()].getAccNorm(), application.sensorGridArray[application.getReferenceRow()][application.getReferenceCol()].getMagNorm());
 				Log.d("SENSORDATA","ACCELEROMETER DATA:"+application.sensorGridArray[0][0].getAccNormX()+" "+application.sensorGridArray[0][0].getAccNormY()+" "+application.sensorGridArray[0][0].getAccNormZ());
 				Log.d("SENSORDATA","MAGNETOMETER DATA:"+application.sensorGridArray[0][0].getMagRawX()+" "+application.sensorGridArray[0][0].getMagRawY()+" "+application.sensorGridArray[0][0].getMagRawZ());
 				Segment.setSegmentCenters(application.currentStateSegments, (short)application.getReferenceRow(), (short)application.getReferenceCol());
-				Segment.compansateCentersForTilt(application.refferenceStateSegmentsInitial, application.currentStateSegments, application.refferenceStateSegments,application.getReferenceRow(),application.getReferenceCol());
+				Segment.compansateCentersForTilt(application.refferenceStateSegmentsInitial, application.refferenceStateSegments, application.savedStateRot,application.currentStateRot);
 				application.segmentStateDistances=Segment.compareByCenterDistances(application.refferenceStateSegments, application.currentStateSegments);
 				maxDistance=SensorDataProcessing.getMaxDistanceFromDistancesReduced(application.segmentStateDistances);
 //				maxSagitalDistance=AccelerometerDataProcessing.getMaxDistanceSagital(application.savedStateOfPoints, application.currentAccPoints);

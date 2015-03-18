@@ -13,6 +13,7 @@ import java.util.Calendar;
 
 import lv.edi.SmartWear.R;
 import lv.edi.SmartWearProcessing.Segment;
+import lv.edi.SmartWearProcessing.SensorDataProcessing;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -304,7 +305,7 @@ public class ProcessingActivity extends Activity implements OnGestureListener, O
 					application.refferenceStateSegmentsInitial[application.getReferenceRow()][application.getReferenceCol()].center[0]=0;
 					application.refferenceStateSegmentsInitial[application.getReferenceRow()][application.getReferenceCol()].center[1]=0;
 					application.refferenceStateSegmentsInitial[application.getReferenceRow()][application.getReferenceCol()].center[2]=0;
-
+					application.savedStateRot=SensorDataProcessing.getRotationTRIAD(application.sensorGridArray[application.getReferenceRow()][application.getReferenceCol()].getAccNorm(), application.sensorGridArray[application.getReferenceRow()][application.getReferenceCol()].getMagNorm());
 					Segment.setAllSegmentOrientationsTRIAD(application.refferenceStateSegments, application.sensorGridArray);
 					Segment.setAllSegmentOrientationsTRIAD(application.refferenceStateSegmentsInitial, application.sensorGridArray);
 					

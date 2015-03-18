@@ -157,7 +157,8 @@ public class BluetoothService {
 												short magy = (short)(packet[9]*256+packet[10]);
 												short magz = (short)(packet[11]*256+packet[12]);
 												double accMagnitude = Math.sqrt(Math.pow(accx, 2)+Math.pow(accy, 2)+Math.pow(accz, 2));
-												if(((accMagnitude<20800)&&(accMagnitude>11000))){
+												double magMagnitude = Math.sqrt(Math.pow(magx, 2)+Math.pow(magy, 2)+Math.pow(magz, 2));
+												if(((accMagnitude<20800)&&(accMagnitude>11000)&&(magMagnitude>0)&&(magMagnitude<2000))){
 												application.sensorArray[packet[0]].updateSensorData(accx, // forming accelerometer x data from two received data bytes
 																									accy, // forming accelerometer y data from two received data bytes
 																									accz, // forming accelerometer z data from two received data bytes

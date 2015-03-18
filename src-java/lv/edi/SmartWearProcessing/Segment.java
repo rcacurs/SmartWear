@@ -1,6 +1,7 @@
 package lv.edi.SmartWearProcessing;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
+import android.util.Log;
 /**
  * class that describes one sensor grid segment (node or accelerometer)
  * @author Richards
@@ -382,6 +383,20 @@ public class Segment {
 		}
 		return distancesCoronal;
 	}
+	
+	public static void compansateCentersForTilt(Segment[][] refferenceStateInitial, Segment[][] refferenceState, float[][] Rreference, float[][] Rcurent){
+		float[][] R = SensorDataProcessing.multMatMatT(Rcurent, Rreference);
+		
+		//SensorDataProcessing.transpose(R);
+		Log.d("COMPENSATE_TILT_CALIB", "CALIB MAT: "+R[0][0]+" "+R[0][1]+" "+R[0][2]+" "+R[1][0]+" "+R[1][1]+" "+R[1][2]+" "+R[2][0]+" "+R[2][1]+" "+R[2][2]);
+		for(int i=0; i<refferenceState.length; i++){
+			for(int j=0; j<refferenceState[0].length;j++){
+				
+				SensorDataProcessing.multiplyMatrix(R, refferenceStateInitial[i][j].center, refferenceState[i][j].center);
+				
+			}
+		}
+	}
 	/**
 	 * method for compensating for tilt 
 	 * @param refferenceStateInitial
@@ -392,18 +407,46 @@ public class Segment {
 	 */
 	public static void compansateCentersForTilt(Segment[][] refferenceStateInitial, Segment[][] currentState, Segment[][] refferenceState, int referenceRow, int referenceCol){
 		float n[] = new float[3];
+		float n2[] = new float[3];
 		float fi;
+		float fi2;
 		float[] q = new float[4];
-		SensorDataProcessing.crossProduct(refferenceStateInitial[referenceRow+1][referenceCol].center, currentState[referenceRow+1][referenceCol].center, n);
+		float[] q2 = new float[4];
+
+		SensorDataProcessing.crossProduct(refferenceStateInitial[referenceRow][referenceCol].cross[0], currentState[referenceRow][referenceCol].cross[0], n);
+		
 		//Log.d("COMPENSATE_TILT","n: "+n[0]+" "+n[1]+" "+n[2]);
 		SensorDataProcessing.normalizeVector(n);
+	
 		//Log.d("COMPENSATE_TILT","n_N: "+n[0]+" "+n[1]+" "+n[2]);
-		fi=(float)Math.acos(SensorDataProcessing.dotProduct(refferenceStateInitial[referenceRow+1][referenceCol].center, currentState[referenceRow+1][referenceCol].center)/
-				(SensorDataProcessing.getVectorLength(refferenceStateInitial[referenceRow+1][referenceCol].center)*SensorDataProcessing.getVectorLength(currentState[referenceRow+1][referenceCol].center)));
+		fi=(float)Math.acos(SensorDataProcessing.dotProduct(refferenceStateInitial[referenceRow][referenceCol].cross[0], currentState[referenceRow][referenceCol].cross[0])/
+				(SensorDataProcessing.getVectorLength(refferenceStateInitial[referenceRow][referenceCol].cross[0])*SensorDataProcessing.getVectorLength(currentState[referenceRow][referenceCol].cross[0])));
+		
 		SensorDataProcessing.quaternion(n, fi, q);
+		
 		for(int i=0; i<refferenceState.length; i++){
 			for(int j=0; j<refferenceState[0].length;j++){
 				SensorDataProcessing.quatRotate(q, refferenceStateInitial[i][j].center, refferenceState[i][j].center);
+				for(int k=0; k<4; k++){
+					SensorDataProcessing.quatRotate(q, refferenceStateInitial[i][j].cross[k], refferenceState[i][j].cross[k]);
+				}
+				//Log.d("COMPENSATE_TILT","rotated center: "+refferenceState[i][j].center[0]+" "+refferenceState[i][j].center[1]+" "+refferenceState[i][j].center[2]);
+			}
+		}
+		SensorDataProcessing.crossProduct(refferenceState[referenceRow][referenceCol].cross[1], currentState[referenceRow][referenceCol].cross[1], n2);
+		SensorDataProcessing.normalizeVector(n2);
+		
+		fi2=(float)Math.acos(SensorDataProcessing.dotProduct(refferenceState[referenceRow][referenceCol].cross[1], currentState[referenceRow][referenceCol].cross[1])/
+				(SensorDataProcessing.getVectorLength(refferenceState[referenceRow][referenceCol].cross[1])*SensorDataProcessing.getVectorLength(currentState[referenceRow][referenceCol].cross[1])));
+		SensorDataProcessing.quaternion(n2, fi2, q2);
+		
+		for(int i=0; i<refferenceState.length; i++){
+			for(int j=0; j<refferenceState[0].length;j++){
+				Segment temp = new Segment();
+				for(int k=0; k<3; k++){
+					temp.center[k]=refferenceState[i][j].center[k];
+				}
+				SensorDataProcessing.quatRotate(q2, temp.center, refferenceState[i][j].center);
 				//Log.d("COMPENSATE_TILT","rotated center: "+refferenceState[i][j].center[0]+" "+refferenceState[i][j].center[1]+" "+refferenceState[i][j].center[2]);
 			}
 		}

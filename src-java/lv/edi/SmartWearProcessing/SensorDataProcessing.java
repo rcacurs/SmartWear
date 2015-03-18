@@ -620,6 +620,19 @@ public class SensorDataProcessing {
 		return result;
 	}
 	
+	public static void transpose(float[][] mat){
+		float[][] res = new float[mat.length][mat[0].length];
+		for(int i=0; i<mat.length; i++){
+			for(int j=0; j<mat[0].length; j++){
+				res[j][i]=mat[i][j];
+			}
+		}
+		for(int i=0; i<mat.length; i++){
+			for(int j=0; j<mat[0].length; j++){
+				mat[i][j]=res[i][j];
+			}
+		}
+	}
 	/**
 	 * Method performs Kalman filtering on specified data
 	 * @param float array of length 3 representing 3 axis sensor data

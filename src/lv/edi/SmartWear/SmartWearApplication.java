@@ -79,6 +79,8 @@ public class SmartWearApplication extends Application implements OnSharedPrefere
 	float[][][] savedStateOfPointsInitial = new float[5][4][3]; // saved state of points
 	float[][][] savedStateOfAngles = new float[3][4][2];
 	float[][][] currentAccAngles = new float[3][4][2];
+	float[][] savedStateRot = new float[3][3];
+	float[][] currentStateRot = new float[3][3];
 //	static final byte drawingModelColormap[][]={{0, (byte)54, (byte)255},
 //												{0, (byte)159, (byte)255},
 //												{0, (byte)255, (byte)255},
