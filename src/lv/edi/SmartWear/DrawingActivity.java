@@ -198,7 +198,6 @@ public class DrawingActivity extends Activity {
 		       		 // temporary vector for  camera up vector
 		       		 float[] offset = application.currentStateSegments[SmartWearApplication.GRID_ROWS/2][SmartWearApplication.GRID_COLS/2].center;
 		       		 float[] initialVectOffset = new float[3];
-		       		 float[] initialUpVectOffset = new float[3];
 		       		 for(int i=0; i<3;i++){
 		       			initialVectOffset[i]=INITIAL_VECT[i]-offset[i];
 		       		 }

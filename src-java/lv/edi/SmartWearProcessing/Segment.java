@@ -1,7 +1,6 @@
 package lv.edi.SmartWearProcessing;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
-import android.util.Log;
 /**
  * class that describes one sensor grid segment (node or accelerometer)
  * @author Richards
@@ -58,7 +57,6 @@ public class Segment {
 		SensorDataProcessing.quaternion(n, angle, q);
 		for(int i = 0; i<4; i++){
 			SensorDataProcessing.quatRotate(q, tempCross[i], initialCross[i]);
-			//Log.d("SETTING INITIAL CROSS", " "+i+": "+initialCross[i][0]+" "+ initialCross[i][1]+" "+initialCross[i][2]);
 		}	
 	}
 	/**Sets segment current orientation 
@@ -76,7 +74,6 @@ public class Segment {
 		SensorDataProcessing.quaternion(n, fi, q); //get quaternion
 		for(int i = 0; i<4; i++){
 			SensorDataProcessing.quatRotate(q, initialCross[i], cross[i]);
-			//Log.d("SETTING INITIAL CROSS", " "+i+": "+initialCross[i][0]+" "+ initialCross[i][1]+" "+initialCross[i][2]);
 			
 		}
 	}
@@ -388,7 +385,6 @@ public class Segment {
 		float[][] R = SensorDataProcessing.multMatMatT(Rcurent, Rreference);
 		
 		//SensorDataProcessing.transpose(R);
-		Log.d("COMPENSATE_TILT_CALIB", "CALIB MAT: "+R[0][0]+" "+R[0][1]+" "+R[0][2]+" "+R[1][0]+" "+R[1][1]+" "+R[1][2]+" "+R[2][0]+" "+R[2][1]+" "+R[2][2]);
 		for(int i=0; i<refferenceState.length; i++){
 			for(int j=0; j<refferenceState[0].length;j++){
 				
@@ -415,10 +411,8 @@ public class Segment {
 
 		SensorDataProcessing.crossProduct(refferenceStateInitial[referenceRow][referenceCol].cross[0], currentState[referenceRow][referenceCol].cross[0], n);
 		
-		//Log.d("COMPENSATE_TILT","n: "+n[0]+" "+n[1]+" "+n[2]);
 		SensorDataProcessing.normalizeVector(n);
 	
-		//Log.d("COMPENSATE_TILT","n_N: "+n[0]+" "+n[1]+" "+n[2]);
 		fi=(float)Math.acos(SensorDataProcessing.dotProduct(refferenceStateInitial[referenceRow][referenceCol].cross[0], currentState[referenceRow][referenceCol].cross[0])/
 				(SensorDataProcessing.getVectorLength(refferenceStateInitial[referenceRow][referenceCol].cross[0])*SensorDataProcessing.getVectorLength(currentState[referenceRow][referenceCol].cross[0])));
 		
@@ -430,7 +424,7 @@ public class Segment {
 				for(int k=0; k<4; k++){
 					SensorDataProcessing.quatRotate(q, refferenceStateInitial[i][j].cross[k], refferenceState[i][j].cross[k]);
 				}
-				//Log.d("COMPENSATE_TILT","rotated center: "+refferenceState[i][j].center[0]+" "+refferenceState[i][j].center[1]+" "+refferenceState[i][j].center[2]);
+				
 			}
 		}
 		SensorDataProcessing.crossProduct(refferenceState[referenceRow][referenceCol].cross[1], currentState[referenceRow][referenceCol].cross[1], n2);
@@ -447,7 +441,6 @@ public class Segment {
 					temp.center[k]=refferenceState[i][j].center[k];
 				}
 				SensorDataProcessing.quatRotate(q2, temp.center, refferenceState[i][j].center);
-				//Log.d("COMPENSATE_TILT","rotated center: "+refferenceState[i][j].center[0]+" "+refferenceState[i][j].center[1]+" "+refferenceState[i][j].center[2]);
 			}
 		}
 	}
