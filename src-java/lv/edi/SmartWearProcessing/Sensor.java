@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+import android.util.Log;
+
 //import android.util.Log;
 /**This class represents sensor object in sensor grid
  * @author Richards Cacurs*/
@@ -31,6 +33,10 @@ public class Sensor {
 	 * @param identificator integer that represents sensor identifier
 	 * @param orientationUp shows if integer is put up or down. true value*/
 	public Sensor(int identifier, boolean isOrientationUp){
+		for(int i=0; i<3; i++){
+			P_xyz_acc[i]=1;
+			P_xyz_mag[i]=1;
+		}
 		this.identifier = identifier;
 		this.isOrientationUp = isOrientationUp;
 	}
@@ -86,6 +92,7 @@ public class Sensor {
 			accData[0]=rawAccFilteredData[0];
 			accData[1]=rawAccFilteredData[1];
 			accData[2]=rawAccFilteredData[2];
+			Log.d("FILTERING", "FILTERacc");
 		} else{
 			accData[0]=rawAccData[0];
 			accData[1]=rawAccData[1];
@@ -103,6 +110,7 @@ public class Sensor {
 	public synchronized float getAccNormY(){
 		float[] accData = new float[3];
 		if(filter){
+			Log.d("FILTERING", "FILTERmag");
 			accData[0]=rawAccFilteredData[0];
 			accData[1]=rawAccFilteredData[1];
 			accData[2]=rawAccFilteredData[2];
@@ -177,14 +185,20 @@ public class Sensor {
 		float magDataY;
 		float magDataZ;
 	
-		if(calibratedMagData==null){
-			magDataX=rawMagData[0];
-			magDataY=rawMagData[1];
-			magDataZ=rawMagData[2];
+		if(filter){
+			magDataX=rawMagFilteredData[0];
+			magDataY=rawMagFilteredData[1];
+			magDataZ=rawMagFilteredData[2];
 		} else{
-			magDataX=calibratedMagData[0];
-			magDataY=calibratedMagData[1];
-			magDataZ=calibratedMagData[2];
+			if(calibratedMagData!=null){
+				magDataX=calibratedMagData[0];
+				magDataY=calibratedMagData[1];
+				magDataZ=calibratedMagData[2];
+			} else{
+				magDataX=rawMagData[0];
+				magDataY=rawMagData[1];
+				magDataZ=rawMagData[2];
+			}
 		}
 		if(isOrientationUp){
 			return (float) ((magDataZ)/(sqrt(pow(magDataX,2)+pow(magDataY,2)+pow(magDataZ,2))));
@@ -198,14 +212,20 @@ public class Sensor {
 		float magDataY;
 		float magDataZ;
 	
-		if(calibratedMagData==null){
-			magDataX=rawMagData[0];
-			magDataY=rawMagData[1];
-			magDataZ=rawMagData[2];
+		if(filter){
+			magDataX=rawMagFilteredData[0];
+			magDataY=rawMagFilteredData[1];
+			magDataZ=rawMagFilteredData[2];
 		} else{
-			magDataX=calibratedMagData[0];
-			magDataY=calibratedMagData[1];
-			magDataZ=calibratedMagData[2];
+			if(calibratedMagData!=null){
+				magDataX=calibratedMagData[0];
+				magDataY=calibratedMagData[1];
+				magDataZ=calibratedMagData[2];
+			} else{
+				magDataX=rawMagData[0];
+				magDataY=rawMagData[1];
+				magDataZ=rawMagData[2];
+			}
 		}
 		if(isOrientationUp){
 			return (float) (-(magDataY)/(sqrt(pow(magDataX,2)+pow(magDataY,2)+pow(magDataZ,2))));
