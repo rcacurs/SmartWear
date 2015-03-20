@@ -1,4 +1,4 @@
-package lv.edi.SmartWear;
+package lv.edi.SmartWearMagn;
 
 import java.nio.ByteBuffer; 
 import java.nio.ByteOrder; 

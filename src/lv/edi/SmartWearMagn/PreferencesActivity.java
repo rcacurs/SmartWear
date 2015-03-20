@@ -1,5 +1,6 @@
-package lv.edi.SmartWear;
+package lv.edi.SmartWearMagn;
 
+import lv.edi.SmartWearMagn.R;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;

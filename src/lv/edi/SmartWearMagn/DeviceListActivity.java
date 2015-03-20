@@ -1,9 +1,8 @@
-package lv.edi.SmartWear;
+package lv.edi.SmartWearMagn;
 
 import java.util.Set;
 
-import lv.edi.SmartWear.R;
-
+import lv.edi.SmartWearMagn.R;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;

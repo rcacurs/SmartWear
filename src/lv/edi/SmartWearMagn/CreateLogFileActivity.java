@@ -1,9 +1,9 @@
-package lv.edi.SmartWear;
+package lv.edi.SmartWearMagn;
 
 import java.io.File;
 import java.io.IOException;
 
-import lv.edi.SmartWear.R;
+import lv.edi.SmartWearMagn.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;

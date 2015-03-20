@@ -1,20 +1,20 @@
-package lv.edi.SmartWear;
+package lv.edi.SmartWearMagn;
 
 import javax.microedition.khronos.egl.EGLConfig; 
 import javax.microedition.khronos.opengles.GL10; 
 import android.opengl.GLSurfaceView; 
 import android.opengl.GLU;
 
-class AccGridRenderer implements GLSurfaceView.Renderer 
+class ColorScaleRenderer implements GLSurfaceView.Renderer 
 { 
 	private SmartWearApplication application;
-	volatile public double viewPointVector[] = {0, -40, 0};
-	volatile public double cameraUpVector[] = {0, 0, 1};
+	ColorScaleModel mModel;
+	private boolean mTranslucentBackground; 
 	
-	public AccGridRenderer(boolean useTranslucentBackground, SmartWearApplication app) { 
+	public ColorScaleRenderer(boolean useTranslucentBackground, SmartWearApplication app) { 
 		mTranslucentBackground = useTranslucentBackground;
 		application = app;
-		mModel = new AccGridDrawingModel(application);
+		mModel = new ColorScaleModel(application);
 	} 
 	public void onDrawFrame(GL10 gl){ 
 				gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT); 
@@ -23,9 +23,7 @@ class AccGridRenderer implements GLSurfaceView.Renderer
 				gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 				gl.glEnableClientState(GL10.GL_COLOR_ARRAY); 
 				gl.glDisable(GL10.GL_CULL_FACE);
-				
-				//
-			    GLU.gluLookAt(gl, (float)viewPointVector[0], (float)viewPointVector[1], (float)viewPointVector[2], application.currentStateSegments[(int)(SmartWearApplication.GRID_ROWS/2)][(int)(SmartWearApplication.GRID_COLS/2)].center[0], application.currentStateSegments[(int)(SmartWearApplication.GRID_ROWS/2)][(int)(SmartWearApplication.GRID_COLS/2)].center[1], application.currentStateSegments[(int)(SmartWearApplication.GRID_ROWS/2)][(int)(SmartWearApplication.GRID_COLS/2)].center[2], (float)cameraUpVector[0], (float)cameraUpVector[1], (float)cameraUpVector[2]); 	
+			    GLU.gluLookAt(gl, 0f, 0f, 5f, 0f, 0f, 0, 0, 1, 0); 	
 				mModel.draw(gl);		
 	} 
 	public void onSurfaceChanged(GL10 gl, int width, int height){ 
@@ -33,7 +31,7 @@ class AccGridRenderer implements GLSurfaceView.Renderer
 				float ratio = (float) width / height; 
 				gl.glMatrixMode(GL10.GL_PROJECTION);
 				gl.glLoadIdentity(); 
-				gl.glFrustumf(-ratio, ratio, -1, 1, 1, 140);
+				gl.glFrustumf(-ratio, ratio, -1, 1, 1, 100);
 	} 
 	public void onSurfaceCreated(GL10 gl, EGLConfig config){ 
 				gl.glDisable(GL10.GL_DITHER);
@@ -48,7 +46,7 @@ class AccGridRenderer implements GLSurfaceView.Renderer
 				gl.glEnable(GL10.GL_CULL_FACE);
 				gl.glEnable(GL10.GL_DEPTH_TEST);
 	} 
-	private boolean mTranslucentBackground; 
-	private AccGridDrawingModel mModel; 
+	
+
 	
 } 

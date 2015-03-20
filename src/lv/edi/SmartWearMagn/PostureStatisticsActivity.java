@@ -1,11 +1,12 @@
-package lv.edi.SmartWear;
+package lv.edi.SmartWearMagn;
 
 
 
-import lv.edi.SmartWear.R;
+import lv.edi.SmartWearMagn.R;
 
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;

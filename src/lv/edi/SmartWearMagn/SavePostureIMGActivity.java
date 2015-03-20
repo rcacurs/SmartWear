@@ -1,4 +1,4 @@
-package lv.edi.SmartWear;
+package lv.edi.SmartWearMagn;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,8 +9,7 @@ import java.nio.IntBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import lv.edi.SmartWear.R;
-
+import lv.edi.SmartWearMagn.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;

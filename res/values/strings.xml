@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SmartWearApplication</string>
+    <string name="app_name">SmartWear</string>
     <string name="menu_settings">Settings</string>
     <string name="title_bluetooth_connection">Data Source</string>
     <string name="title_activity_bluetooth_connection">Data Source</string>

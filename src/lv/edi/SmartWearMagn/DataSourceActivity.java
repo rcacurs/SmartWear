@@ -1,6 +1,6 @@
-package lv.edi.SmartWear;
+package lv.edi.SmartWearMagn;
 
-import lv.edi.SmartWear.R;
+import lv.edi.SmartWearMagn.R;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;

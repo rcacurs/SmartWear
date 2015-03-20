@@ -1,9 +1,10 @@
-package lv.edi.SmartWear;
+package lv.edi.SmartWearMagn;
 
 import java.text.NumberFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import lv.edi.SmartWearMagn.R;
 import lv.edi.SmartWearProcessing.Segment;
 import lv.edi.SmartWearProcessing.SensorDataProcessing;
 import android.app.Activity;

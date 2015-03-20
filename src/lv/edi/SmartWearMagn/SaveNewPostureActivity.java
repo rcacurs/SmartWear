@@ -1,11 +1,11 @@
-package lv.edi.SmartWear;
+package lv.edi.SmartWearMagn;
 
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import lv.edi.SmartWear.R;
+import lv.edi.SmartWearMagn.R;
 import lv.edi.SmartWearProcessing.Segment;
 import android.app.Activity;
 import android.os.Bundle;

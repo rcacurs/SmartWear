@@ -1,4 +1,4 @@
-package lv.edi.SmartWear;
+package lv.edi.SmartWearMagn;
 
 //import java.io.File;
 import java.io.DataInputStream;
@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.Calendar;
 
-import lv.edi.SmartWear.R;
+import lv.edi.SmartWearMagn.R;
 import lv.edi.SmartWearProcessing.Segment;
 import lv.edi.SmartWearProcessing.SensorDataProcessing;
 import android.annotation.SuppressLint;
