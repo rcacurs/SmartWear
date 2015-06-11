@@ -1,0 +1,52 @@
+
+    <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <EditTextPreference
+            android:key="set_angle1"
+            android:title="Precalibration Angle 1"
+            android:summary="Precalibration Angle 1"
+            android:inputType="numberDecimal"
+            android:digits="01234567890."
+            android:defaultValue="0.0"></EditTextPreference>
+          
+          <EditTextPreference
+            android:key="set_angle2"
+            android:title="Precalibration Angle 2"
+            android:summary="Precalibration Angle 2"
+            android:inputType="numberDecimal"
+            android:digits="01234567890."
+            android:defaultValue="0.0"></EditTextPreference>
+          
+            <EditTextPreference
+            android:key="set_angle3"
+            android:title="Precalibration Angle 3"
+            android:summary="Precalibration Angle 3"
+            android:inputType="numberDecimal"
+            android:digits="01234567890."
+            android:defaultValue="0.0"></EditTextPreference>
+            
+            <EditTextPreference
+                android:key="set_reference_row"
+                android:title="Reference Sensor Row"
+                android:summary="Reference Sensor Row"
+                android:inputType="numberDecimal"
+                android:digits="0123456789"
+                android:defaultValue="1"
+            />
+            
+            <EditTextPreference
+                android:key="set_reference_col"
+                android:title="Reference Sensor Column"
+                android:summary="Reference Sensor Column"
+                android:inputType="numberDecimal"
+                android:digits="0123456789"
+                android:defaultValue="3"
+            />
+            <EditTextPreference
+                android:key="set_colormap_sensitivity"
+                android:title="Colormap Sensitivity"
+                android:summary="Colormap Sensitivity"
+                android:inputType="numberDecimal"
+                android:digits="0123456789."
+                android:defaultValue="1.0"/>
+    </PreferenceScreen>
